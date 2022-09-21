@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-
     <title>Document</title>
 </head>
 
@@ -14,7 +13,25 @@
         <div id="myDropdown" class="dropdown-content">
             <input type="text" id="myInput" onblur="endOut()" onfocus="startOut()" onkeyup="filterFunction()">
             <?php
-            $array = array("Gomel", "Minsk", "Grodno", "Vitebsk", "Mogilev", "Brest");
+            $serverName = "F1L1N"; //serverName\instanceName
+            $connectionInfo = array(
+                'CharacterSet' => 'UTF-8',
+                "Database" => "MySATO");
+            $conn = sqlsrv_connect($serverName, $connectionInfo);
+            $sql = "SELECT City FROM [MySATO].[dbo].[SATO]";
+            $stmt = sqlsrv_query($conn, $sql);
+            $array = array(sqlsrv_num_fields($stmt));
+            if (sqlsrv_num_fields($stmt) == false) {
+                echo "No rows returned.";
+            } else {
+                $i = 0;
+                while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    $array[$i] = $row['City'];
+                    $i++;
+                }
+                
+            }
+            sqlsrv_close($conn);
             foreach ($array as $value) {
                 echo "<a style=\"display: none\" onclick=\"editInput('" . $value . "')\">" . $value . "</a>";
             }
