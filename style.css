@@ -36,7 +36,7 @@
   
   /* Dropdown Content (Hidden by Default) */
   .dropdown-content {
-    display: none;
+    display: block;
     position: absolute;
     background-color: #f6f6f6;
     min-width: 230px;
@@ -52,6 +52,10 @@
     display: block;
   }
   
+.hidden{
+    display: none;
+}
+
   /* Change color of dropdown links on hover */
   .dropdown-content a:hover {background-color: #f1f1f1}
   
