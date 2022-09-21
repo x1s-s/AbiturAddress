@@ -10,7 +10,6 @@
 </head>
 
 <body>
-    <button onclick="editInput('Show')">Нажми меня</button>
     <div class="dropdown">
         <div id="myDropdown" class="dropdown-content">
             <input type="text" id="myInput" onblur="endOut()" onfocus="startOut()" onkeyup="filterFunction()">
