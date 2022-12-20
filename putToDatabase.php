@@ -14,7 +14,16 @@ $connectionInfo = array(
     "Database" => "AbiturSOATO"
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "INSERT INTO [AbiturSOATO].[dbo].[ResultTable] ([Address],Fullname,Passport) VALUES ('".$str."', '".$fullname."', '".$passport."')";
+$sql = "INSERT INTO [AbiturSOATO].[dbo].[ResultTable] 
+        (ФИО, [Номер паспорта], Область, Город, [Населённый пункт], Улица, [Номер строения], [Почтовый индекс]) 
+        VALUES ('$fullname', 
+                '$passport', 
+                '$area', 
+                '$region',
+                '$city',
+                '$street', 
+                '$house', 
+                '$postindex')";
 $stmt = sqlsrv_query($conn, $sql);
 sqlsrv_close($conn);
 ?>
