@@ -5,10 +5,11 @@ $foreiginKeyName = $_GET['foreiginKeyName'];
 $previosInput = $_GET['previosInput'];
 $BDprevios  = $_GET['BDprevios'];
 $BDid = $_GET['BDid'];
-$serverName = "F1L1N\SQLExpress";
+$args = include 'db.php';
+$serverName = $args['dsn'];
 $connectionInfo = array(
-    'CharacterSet' => 'UTF-8',
-    "Database" => "AbiturSOATO"
+    'CharacterSet' => $args['charset'],
+    "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
 $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_" . $BDtype ."] WHERE ".$foreiginKeyName." IN(select ".$BDid." from [AbiturSOATO].[dbo].[SOATO_" . $BDprevios ."] where Name = '".$previosInput."')";

@@ -31,7 +31,7 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
             });
             setTimeout(function () {
                 document.getElementById(anketaform).focus();
-            }, 250);
+            }, 300);
         } else {
             var array = document.getElementById(divid).getElementsByTagName("a");
             for (var i = 0; i < array.length && i < 25; i++) {
@@ -52,7 +52,7 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
             });
             setTimeout(function () {
                 document.getElementById(anketaform).focus();
-            }, 250);
+            }, 300);
         } else {
             var array = document.getElementById(divid).getElementsByTagName("a");
             for (var i = 0; i < array.length && i < 25; i++) {
@@ -81,7 +81,7 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
             txtValue = a[i].textContent || a[i].innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
                 a[i].style.display = "";
-                if(count++ >= 25) break;
+                if(count++ >= 10) break;
             } else {
                 a[i].style.display = "none";
             }

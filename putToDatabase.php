@@ -8,10 +8,11 @@ $postindex = $_POST['postindex'];
 $fullname = $_POST['fullname'];
 $passport = $_POST['passport'];
 $str = $area . ", " . $region . ", " . $city . ", " . $street . ", " . $house . ", " . $postindex;
-$serverName = "F1L1N\SQLExpress";
+$args = include 'db.php';
+$serverName = $args['dsn'];
 $connectionInfo = array(
-    'CharacterSet' => 'UTF-8',
-    "Database" => "AbiturSOATO"
+    'CharacterSet' => $args['charset'],
+    "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
 $sql = "INSERT INTO [AbiturSOATO].[dbo].[ResultTable] 
