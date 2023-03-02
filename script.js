@@ -1,4 +1,4 @@
-URL_PATH = "http://localhost:63342/AbiturAddress/exampleOfDirectory/"
+URL_PATH = "exampleOfDirectory/"
 
 
 function editInput(value, inputid) {
@@ -41,7 +41,7 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
             }
         }
     } else {
-        if (document.getElementById(divid).getElementsByTagName("a").length == 0) {
+        if (document.getElementById(divid).getElementsByTagName("a").length === 0) {
             previosInput = document.getElementById(previosInputID).value;
             $.ajax({
                 url: URL_PATH + 'funcRegion.php',         /* Куда отправить запрос */
