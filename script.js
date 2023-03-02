@@ -1,5 +1,5 @@
-URL_PATH = "exampleOfDirectory/"
-
+URL_PATH = window.location.href;
+URL_PATH = URL_PATH.substring(0, URL_PATH.length - 9) + 'exampleOfDirectory/'
 
 function editInput(value, inputid) {
     document.getElementById(inputid).value = value;
@@ -19,6 +19,7 @@ function test() {
 
 function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = null, foreiginKeyName = null) {
     $BDid = "ID";
+    console.log(URL_PATH)
     if(BDtype === 'Улицы') $BDid = "SOATO";
     if (previosInputID == null) {
         if (document.getElementById(divid).getElementsByTagName("a").length === 0) {
@@ -28,6 +29,8 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
                 dataType: 'html',
                 data: { BDtype: BDtype, anketa: anketaform },
                 success: function (data) {
+                    console.log('I start do shit')
+                    console.log(data)
                     document.getElementById(divid).innerHTML += data;
                 }
             });
