@@ -14,7 +14,6 @@
 </head>
 
 <body>
-</div>
     <div class="dropdown">
         <div id="myDropdown" class="dropdown-content">
             <h4>ФИО</h4>
@@ -28,7 +27,7 @@
         </div>
     </div>
     <div style="margin-left:500px">
-        <button clas="btn btn-success" onclick="submitToBD()">Отправить</button>
+        <button class="btn btn-success" onclick="submitToBD()">Отправить</button>
     </div>
     <div class="AddressInput" style="margin-top:50px">
     <div class="dropdown">

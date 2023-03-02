@@ -1,3 +1,5 @@
+URL_PATH = "http://localhost:63342/AbiturAddress/exampleOfDirectory/"
+
 
 function editInput(value, inputid) {
     document.getElementById(inputid).value = value;
@@ -5,28 +7,28 @@ function editInput(value, inputid) {
 
 function test() {
     $.ajax({
-        url: '/func.php',         /* Куда отправить запрос */
-        method: 'get',             /* Метод запроса (post или get) */
-        dataType: 'html',          /* Тип данных в ответе (xml, json, script, html). */
-        data: { BDtype: 'Области' },     /* Данные передаваемые в массиве */
-        success: function (data) {   /* функция которая будет выполнена после успешного запроса.  */
-            alert(data); /* В переменной data содержится ответ от index.php. */
+        url: URL_PATH + 'func.php',
+        method: 'get',
+        dataType: 'html',
+        data: { BDtype: 'Области' },
+        success: function (data) {
+            alert(data);
         }
     });
 }
 
 function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = null, foreiginKeyName = null) {
     $BDid = "ID";
-    if(BDtype == 'Улицы') $BDid = "SOATO";
+    if(BDtype === 'Улицы') $BDid = "SOATO";
     if (previosInputID == null) {
-        if (document.getElementById(divid).getElementsByTagName("a").length == 0) {
+        if (document.getElementById(divid).getElementsByTagName("a").length === 0) {
             $.ajax({
-                url: '/func.php',         /* Куда отправить запрос */
-                method: 'get',             /* Метод запроса (post или get) */
-                dataType: 'html',          /* Тип данных в ответе (xml, json, script, html). */
-                data: { BDtype: BDtype, anketa: anketaform },     /* Данные передаваемые в массиве */
-                success: function (data) {   /* функция которая будет выполнена после успешного запроса.  */
-                    document.getElementById(divid).innerHTML += data; /* В переменной data содержится ответ от index.php. */
+                url: URL_PATH + 'func.php',
+                method: 'get',
+                dataType: 'html',
+                data: { BDtype: BDtype, anketa: anketaform },
+                success: function (data) {
+                    document.getElementById(divid).innerHTML += data;
                 }
             });
             setTimeout(function () {
@@ -34,7 +36,7 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
             }, 300);
         } else {
             var array = document.getElementById(divid).getElementsByTagName("a");
-            for (var i = 0; i < array.length && i < 25; i++) {
+            for (var i = 0; i < array.length && i < 7; i++) {
                 array[i].style.display = "block";
             }
         }
@@ -42,7 +44,7 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
         if (document.getElementById(divid).getElementsByTagName("a").length == 0) {
             previosInput = document.getElementById(previosInputID).value;
             $.ajax({
-                url: '/funcRegion.php',         /* Куда отправить запрос */
+                url: URL_PATH + 'funcRegion.php',         /* Куда отправить запрос */
                 method: 'get',             /* Метод запроса (post или get) */
                 dataType: 'html',          /* Тип данных в ответе (xml, json, script, html). */
                 data: { BDtype: BDtype, anketa: anketaform, BDprevios: BDprevios, previosInput: previosInput, foreiginKeyName: foreiginKeyName, BDid: $BDid} ,     /* Данные передаваемые в массиве */
@@ -55,7 +57,7 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
             }, 300);
         } else {
             var array = document.getElementById(divid).getElementsByTagName("a");
-            for (var i = 0; i < array.length && i < 25; i++) {
+            for (var i = 0; i < array.length && i < 7; i++) {
                 array[i].style.display = "block";
             }
         }
@@ -68,11 +70,11 @@ function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = 
             for (var i = 0; i < array.length; i++) {
                 array[i].style.display = "none";
             }
-        }, 200);
+        }, 250);
     }
 
     function filterFunction(divid, inputid) {
-        var input, filter, ul, li, a, i, count = 0;
+        var input, filter, a, i, count = 0;
         input = document.getElementById(inputid);
         filter = input.value.toUpperCase();
         div = document.getElementById(divid);
