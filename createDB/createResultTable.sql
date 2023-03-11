@@ -1,13 +1,19 @@
 DROP TABLE ResultTable
 GO
-CREATE TABLE ResultTable(
-  Код INT IDENTITY(1,1) PRIMARY KEY,
-  ФИО VARCHAR(50) NOT NULL,
-  [Номер паспорта] VARCHAR(15) NOT NULL UNIQUE,
-  Область VARCHAR(28) NOT NULL,
-  Город VARCHAR(31) NOT NULL,
-  [Населённый пункт] VARCHAR(24) NOT NULL,
-  Улица VARCHAR(32) NOT NULL,
-  [Номер строения] VARCHAR(5) NOT NULL,
-  [Почтовый индекс] VARCHAR(15) NOT NULL
+CREATE TABLE ResultTable
+(
+    Код                      INT IDENTITY (1,1) PRIMARY KEY,
+    [Почтновый адрес]        VARCHAR(20),
+    [Страна]                 VARCHAR(15),
+    [Область]                VARCHAR(15),
+    [Город]                  VARCHAR(15),
+    [Тип населённого пункта] VARCHAR(5),
+    [Населённый пункт]       VARCHAR(15),
+    [Тип улицы]              VARCHAR(10),
+    [Улица]                  VARCHAR(25),
+    [Дом]                    VARCHAR(5),
+    [Корпус]                 BIT,
+    [Строение]               BIT,
+    [Квартира]               VARCHAR(4),
+    [ФИО]                    VARCHAR(100)
 )

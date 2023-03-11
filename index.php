@@ -156,6 +156,7 @@
     <input type="checkbox" id="building" placeholder="строение">
     <input type="text" id="textAfterCheckbox">
     <input type="text" id="flat" placeholder="Квартира">
+    <input type="text" id="fio" placeholder="ФИО">
 
     <button onclick="putToDatabase()">Put to Database</button>
 </div>

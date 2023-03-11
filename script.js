@@ -67,7 +67,7 @@ function editStreet() {
     })
 }
 
-function putToDatabase(){
+function putToDatabase() {
     var postIndex = document.getElementById("postIndex").value
     var country = document.getElementById("country").value
     var area = document.getElementById("area").value
@@ -80,5 +80,28 @@ function putToDatabase(){
     var korpus = document.getElementById("korpus").checked
     var building = document.getElementById("building").checked
     var afterCheckbox = document.getElementById("textAfterCheckbox").value
-    alert(postIndex + " " + country + " " + area + " " + city + " " + settlement + " " + typeSettlement + " " + street + " " + house + " " + flat + " " + korpus + " " + building + " " + afterCheckbox)
+    var fio = document.getElementById("fio").value
+    // alert(postIndex + " " + country + " " + area + " " + city + " " + settlement + " " + typeSettlement + " " + street + " " + house + " " + flat + " " + korpus + " " + building + " " + afterCheckbox)
+    $.ajax({
+        type: "POST",
+        url: url + "putToDatabase.php",
+        data: {
+            postIndex: postIndex,
+            country: country,
+            area: area,
+            city: city,
+            settlement: settlement,
+            typeSettlement: typeSettlement,
+            street: street,
+            house: house,
+            flat: flat,
+            korpus: korpus,
+            building: building,
+            afterCheckbox: afterCheckbox,
+            fio: fio
+        },
+        success: function (data) {
+            alert(data)
+        }
+    })
 }
