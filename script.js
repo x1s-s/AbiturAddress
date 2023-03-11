@@ -1,116 +1,84 @@
-URL_PATH = window.location.href;
+var url = window.location.href;
 
-function editInput(value, inputid) {
-    document.getElementById(inputid).value = value;
-}
-
-function test() {
-    $.ajax({
-        url: URL_PATH + 'func.php',
-        method: 'get',
-        dataType: 'html',
-        data: { BDtype: 'Области' },
-        success: function (data) {
-            alert(data);
-        }
-    });
-}
-
-function startOut(divid, BDtype, anketaform, previosInputID = null, BDprevios = null, foreiginKeyName = null) {
-    $BDid = "ID";
-    console.log(URL_PATH)
-    if(BDtype === 'Улицы') $BDid = "SOATO";
-    if (previosInputID == null) {
-        if (document.getElementById(divid).getElementsByTagName("a").length === 0) {
-            $.ajax({
-                url: URL_PATH + 'func.php',
-                method: 'get',
-                dataType: 'html',
-                data: { BDtype: BDtype, anketa: anketaform },
-                success: function (data) {
-                    // console.log('I start do shit')
-                    console.log(data)
-                    document.getElementById(divid).innerHTML += data;
-                }
-            });
-            setTimeout(function () {
-                document.getElementById(anketaform).focus();
-            }, 300);
-        } else {
-            var array = document.getElementById(divid).getElementsByTagName("a");
-            for (var i = 0; i < array.length && i < 7; i++) {
-                array[i].style.display = "block";
-            }
+function createInput() {
+    var elements = document.getElementsByClassName("hidden")
+    if (elements[0].style.display === 'none') {
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = 'block';
         }
     } else {
-        if (document.getElementById(divid).getElementsByTagName("a").length === 0) {
-            previosInput = document.getElementById(previosInputID).value;
-            $.ajax({
-                url: URL_PATH + 'funcRegion.php',         /* Куда отправить запрос */
-                method: 'get',             /* Метод запроса (post или get) */
-                dataType: 'html',          /* Тип данных в ответе (xml, json, script, html). */
-                data: { BDtype: BDtype, anketa: anketaform, BDprevios: BDprevios, previosInput: previosInput, foreiginKeyName: foreiginKeyName, BDid: $BDid} ,     /* Данные передаваемые в массиве */
-                success: function (data) {   /* функция которая будет выполнена после успешного запроса.  */
-                    document.getElementById(divid).innerHTML += data; /* В переменной data содержится ответ от index.php. */
-                }
-            });
-            setTimeout(function () {
-                document.getElementById(anketaform).focus();
-            }, 300);
-        } else {
-            var array = document.getElementById(divid).getElementsByTagName("a");
-            for (var i = 0; i < array.length && i < 7; i++) {
-                array[i].style.display = "block";
-            }
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = 'none';
         }
     }
 }
 
-    function endOut(divid) {
-        setTimeout(function () {
-            var array = document.getElementById(divid).getElementsByTagName("a");
-            for (var i = 0; i < array.length; i++) {
-                array[i].style.display = "none";
-            }
-        }, 250);
-    }
+function getFromDatabase() {
+    var elements = document.getElementById("areaData")
+    elements.innerHTML = "<option>Test</option>"
+}
 
-    function filterFunction(divid, inputid) {
-        var input, filter, a, i, count = 0;
-        input = document.getElementById(inputid);
-        filter = input.value.toUpperCase();
-        div = document.getElementById(divid);
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-                if(count++ >= 10) break;
-            } else {
-                a[i].style.display = "none";
-            }
+function tryByPostIndex() {
+    var postIndex = document.getElementById("postIndex").value
+    document.getElementById("country").value = 'Беларусь'
+    $.ajax({
+        type: "GET", url: url + "getArea.php", data: {postIndex: postIndex}, success: function (data) {
+            document.getElementById("area").value = data
+            var area = data
+            $.ajax({
+                type: "GET", url: url + "getCity.php", data: {area: area}, success: function (data) {
+                    // console.log(data)
+                    document.getElementById("cityData").innerHTML = data
+                }
+            })
         }
-    }
+    })
+    $.ajax({
+        type: "GET", url: url + "getSettlement.php", data: {postIndex: postIndex}, success: function (data) {
+            // console.log(data)
+            document.getElementById("settlementData").innerHTML = data
+        }
+    })
+    $.ajax({
+        type: "GET", url: url + "getTypeSettlement.php", data: {postIndex: postIndex}, success: function (data) {
+            document.getElementById("TypeSettlementData").innerHTML = data
+        }
+    })
 
-    function myFunction(divid) {
-        document.getElementById(divid).classList.toggle("show");
-    }
 
-    function submitToBD(){
-        var area = document.getElementById("anketaform-adres-area").value;
-        var region = document.getElementById("anketaform-adres-town").value;
-        var city = document.getElementById("anketaform-adres-pynkt").value;
-        var street = document.getElementById("anketaform-adres-street").value;
-        var house = document.getElementById("anketaform-adres-house-number").value;
-        var postindex = document.getElementById("anketafrom-adres-postindex").value;
-        var fullname = document.getElementById("anketa-fio").value;
-        var passport = document.getElementById("anketa-pass").value;
-        $.ajax({
-            url: '/putToDatabase.php',
-            method: 'post',          
-            data: { area: area, region: region, city: city, street: street, house: house, postindex: postindex, fullname: fullname, passport: passport }, 
-            success: function () {   
-               alert("Submit success"); 
-            }
-        });
-    } 
+}
+
+function editCity() {
+    var area = document.getElementById("area").value
+    $.ajax({
+        type: "GET", url: url + "getCity.php", data: {area: area}, success: function (data) {
+            document.getElementById("cityData").innerHTML = data
+        }
+    })
+}
+
+function editStreet() {
+    var settlement = document.getElementById("settlement").value
+    var city = document.getElementById("city").value
+    $.ajax({
+        type: "GET", url: url + "getStreet.php", data: {settlement: settlement, city: city}, success: function (data) {
+            document.getElementById("streetData").innerHTML = data
+        }
+    })
+}
+
+function putToDatabase(){
+    var postIndex = document.getElementById("postIndex").value
+    var country = document.getElementById("country").value
+    var area = document.getElementById("area").value
+    var city = document.getElementById("city").value
+    var settlement = document.getElementById("settlement").value
+    var typeSettlement = document.getElementById("TypeSettlement").value
+    var street = document.getElementById("street").value
+    var house = document.getElementById("house").value
+    var flat = document.getElementById("flat").value
+    var korpus = document.getElementById("korpus").checked
+    var building = document.getElementById("building").checked
+    var afterCheckbox = document.getElementById("textAfterCheckbox").value
+    alert(postIndex + " " + country + " " + area + " " + city + " " + settlement + " " + typeSettlement + " " + street + " " + house + " " + flat + " " + korpus + " " + building + " " + afterCheckbox)
+}
