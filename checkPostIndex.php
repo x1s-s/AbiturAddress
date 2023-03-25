@@ -1,6 +1,6 @@
 <?php
-$BDtype = $_GET['BDtype'];
-$anketa = $_GET['anketa'];
+$settlement = $_GET['settlement'];
+$settlementType = $_GET['settlementType'];
 $args = include 'db.php';
 $serverName = $args['dsn'];
 $connectionInfo = array(
@@ -8,20 +8,21 @@ $connectionInfo = array(
     "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_" . $BDtype ."]";
+$sql = "SELECT PostIndex FROM SOATO_ПочтовыеИндексы WHERE SOATO = 
+                                               (SELECT SOATO FROM SOATO_НаселенныеПункты WHERE Name = '". $settlement ."' AND TypeNS = '". $settlementType ."')";
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));
+$newArray = array();
 if (sqlsrv_num_fields($stmt) == false) {
     echo "No rows returned.";
 } else {
     $i = 0;
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        $array[$i] = $row['Name'];
+        $newArray[$i] = array(
+            'postIndex' => $row['PostIndex']);
         $i++;
     }
 }
 sqlsrv_close($conn);
-foreach ($array as $value) {
-    echo "<a style=\"display: block\" onclick=\"editInput('" . $value . "', '". $anketa ."')\">" . $value . "</a>";
-}
+echo json_encode($newArray, JSON_UNESCAPED_UNICODE);
 ?>

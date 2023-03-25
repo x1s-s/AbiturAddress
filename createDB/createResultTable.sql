@@ -12,8 +12,7 @@ CREATE TABLE ResultTable
     [Тип улицы]              VARCHAR(10),
     [Улица]                  VARCHAR(25),
     [Дом]                    VARCHAR(5),
-    [Корпус]                 BIT,
-    [Строение]               BIT,
+    [КорпусСтроение]         VARCHAR(10),
     [Квартира]               VARCHAR(4),
     [ФИО]                    VARCHAR(100)
 )

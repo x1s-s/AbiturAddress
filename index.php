@@ -17,148 +17,94 @@
 <body>
 
 
-<button onclick="createInput()">toggle</button>
-<div class="hidden">
-    <input type="text" id="postIndex" placeholder="Почтовый адрес" onblur="tryByPostIndex()">
-    <input type="text" id="country" placeholder="Страна" list="countryData">
-    <datalist id="countryData">
-        <?php
-        $args = include 'db.php';
-        $serverName = $args['dsn'];
-        $connectionInfo = array(
-            'CharacterSet' => $args['charset'],
-            "Database" => $args['database'],
-        );
-        $conn = sqlsrv_connect($serverName, $connectionInfo);
-        $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_Страны] WHERE [Name] != 'РБ'";
-        $stmt = sqlsrv_query($conn, $sql);
-        $array = array(sqlsrv_num_fields($stmt));
-        if (sqlsrv_num_fields($stmt) == false) {
-            echo "No rows returned.";
-        } else {
-            $i = 0;
-            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                $array[$i] = $row['Name'];
-                $i++;
-            }
-        }
-        sqlsrv_close($conn);
-        foreach ($array as $value) {
-            echo "<option value=\"" . $value . "\">" . $value . "</option>";
-        }
-        ?>
-        </datalist>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        onclick="loadData()">
+    Launch demo modal
+</button>
 
-    <input type="text" id="area" placeholder="Область" list="areaData" onblur="editCity()">
-    <datalist id="areaData">
-        <?php
-        $args = include 'db.php';
-        $serverName = $args['dsn'];
-        $connectionInfo = array(
-            'CharacterSet' => $args['charset'],
-            "Database" => $args['database'],
-        );
-        $conn = sqlsrv_connect($serverName, $connectionInfo);
-        $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_Области]";
-        $stmt = sqlsrv_query($conn, $sql);
-        $array = array(sqlsrv_num_fields($stmt));
-        if (sqlsrv_num_fields($stmt) == false) {
-            echo "No rows returned.";
-        } else {
-            $i = 0;
-            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                $array[$i] = $row['Name'];
-                $i++;
-            }
-        }
-        sqlsrv_close($conn);
-        foreach ($array as $value) {
-            echo "<option value=\"" . $value . "\">" . $value . "</option>";
-        }
-        ?>
-    </datalist>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="insert">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ввод адресса</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="postIndex" placeholder="Почтовый адрес" onblur="startFromPostIndex()">
+                <input type="text" id="country" placeholder="Страна" list="countryData" value="Беларусь">
+                <input type="text" id="area" placeholder="Область" list="areaData" value="Гомельская">
+                <datalist id="areaData">
+                </datalist>
+                <input type="text" id="city" placeholder="Город" list="cityData" value="Гомель">
+                <input type="text" id="settlementType" placeholder="Тип населённого пункта" list="settlementTypeData">
+                <datalist id="settlementTypeData">
+                </datalist>
+                <input type="text" id="settlement" placeholder="Населённый пункт" onblur="checkPostIndex()" list="settlementData">
+                <input type="text" id="streetType" placeholder="Тип улицы" list="streetTypeData">
+                <datalist id="streetTypeData">
+                </datalist>
+                <input type="text" id="street" placeholder="Улица" onfocus="getStreet()" list="streetData">
+                <datalist id="streetData">
+                </datalist>
+                <div>
+                    <input type="radio" id="korpus" name="contact">
+                    <label for="korpus">Корпус</label>
+                    <input type="radio" id="building" name="contact">
+                    <label for="buldintOrKorpus">Строение</label>
+                    <input type="text" id="korpusOrBuilding">
+                </div>
+                <input type="text" id="house" placeholder="Дом">
+                <input type="text" id="flat" placeholder="Квартира">
+                <input type="text" id="fio" placeholder="ФИО">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="putToDatabase()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="postIndexModal" tabindex="-1" aria-labelledby="postIndexModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="insert">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postIndexModalLabel">Выбор из предложенных вариантов</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid" id="postIndexVariants">
+                    <div class="row">
+                        <div class="col-md-3">Область</div>
+                        <div class="col-md-3">Город</div>
+                        <div class="col-md-3">Тип населенного пункта</div>
+                        <div class="col-md-3">Населённый пункт</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="postIndexCheckModal" tabindex="-1" aria-labelledby="postIndexCheckModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="insert">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postIndexCheckModalLabel">Проверьте почтовый адрес</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid" id="checkVariant">
 
-    <input type="text" id="city" placeholder="Город" list="cityData">
-    <datalist id="cityData">
-    </datalist>
-
-    <input type="text" id="TypeSettlement" placeholder="Тип населенного пункта" list="TypeSettlementData">
-    <datalist id="TypeSettlementData">
-        <?php
-        $args = include 'db.php';
-        $serverName = $args['dsn'];
-        $connectionInfo = array(
-            'CharacterSet' => $args['charset'],
-            "Database" => $args['database'],
-        );
-        $conn = sqlsrv_connect($serverName, $connectionInfo);
-        $sql = "SELECT DISTINCT [CodeSOATO] FROM [AbiturSOATO].[dbo].[SOATO_ТипыНаселенныхПунктов]";
-        $stmt = sqlsrv_query($conn, $sql);
-        $array = array(sqlsrv_num_fields($stmt));
-        if (sqlsrv_num_fields($stmt) == false) {
-            echo "No rows returned.";
-        } else {
-            $i = 0;
-            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                $array[$i] = $row['Name'];
-                $i++;
-            }
-        }
-        sqlsrv_close($conn);
-        foreach ($array as $value) {
-            echo "<option value=\"" . $value . "\">" . $value . "</option>";
-        }
-        ?>
-    </datalist>
-
-    <input type="text" id="settlement" placeholder="Населённый пункт" list="settlementData">
-    <datalist id="settlementData">
-    </datalist>
-
-    <input type="text" id="streetType" placeholder="Тип улицы" list="streetTypeData" onblur="editStreet()">
-    <datalist id="streetTypeData">
-        <?php
-        $args = include 'db.php';
-        $serverName = $args['dsn'];
-        $connectionInfo = array(
-            'CharacterSet' => $args['charset'],
-            "Database" => $args['database'],
-        );
-        $conn = sqlsrv_connect($serverName, $connectionInfo);
-        $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_ТипыУлиц]";
-        $stmt = sqlsrv_query($conn, $sql);
-        $array = array(sqlsrv_num_fields($stmt));
-        if (sqlsrv_num_fields($stmt) == false) {
-            echo "No rows returned.";
-        } else {
-            $i = 0;
-            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                $array[$i] = $row['Name'];
-                $i++;
-            }
-        }
-        sqlsrv_close($conn);
-        foreach ($array as $value) {
-            if($value != "---другое---")
-            echo "<option value=\"" . $value . "\">" . $value . "</option>";
-        }
-        ?>
-    </datalist>
-
-    <input type="text" id="street" placeholder="Улица" list="streetData">
-    <datalist id="streetData">
-    </datalist>
-
-    <input type="text" id="house" placeholder="Дом">
-    <label>Корпус</label>
-    <input type="checkbox" id="korpus" placeholder="Корпус">
-    <label>Строение</label>
-    <input type="checkbox" id="building" placeholder="строение">
-    <input type="text" id="textAfterCheckbox">
-    <input type="text" id="flat" placeholder="Квартира">
-    <input type="text" id="fio" placeholder="ФИО">
-
-    <button onclick="putToDatabase()">Put to Database</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть без измениений</button>
+                <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal" onclick="editCheckedPostIndex()">Изменить почтовый индекс</button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 

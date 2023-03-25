@@ -1,5 +1,5 @@
 <?php
-$PostIndex = $_GET['postIndex'];
+$settlement = $_GET['settlement'];
 $args = include 'db.php';
 $serverName = $args['dsn'];
 $connectionInfo = array(
@@ -7,7 +7,7 @@ $connectionInfo = array(
     "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "SELECT DISTINCT [TypeNS] FROM [AbiturSOATO].[dbo].[SOATO_ПочтовыеИндексы] WHERE [AbiturSOATO].[dbo].[SOATO_ПочтовыеИндексы].[PostIndex] = " . $PostIndex . "";
+$sql = "SELECT DISTINCT [TypeNS] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты] WHERE [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты].[Name] = " . $settlement . "";
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));
 if (sqlsrv_num_fields($stmt) == false) {
@@ -21,6 +21,6 @@ if (sqlsrv_num_fields($stmt) == false) {
 }
 sqlsrv_close($conn);
 foreach ($array as $value) {
-    echo "<option value='" . $value . "'>" . $value . "</option>";
+    echo $value;
 }
 ?>

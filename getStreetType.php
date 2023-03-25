@@ -1,5 +1,4 @@
 <?php
-$PostIndex = $_GET['postIndex'];
 $args = include 'db.php';
 $serverName = $args['dsn'];
 $connectionInfo = array(
@@ -7,20 +6,20 @@ $connectionInfo = array(
     "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "SELECT DISTINCT [City] FROM [AbiturSOATO].[dbo].[SOATO_ПочтовыеИндексы] WHERE [AbiturSOATO].[dbo].[SOATO_ПочтовыеИндексы].[PostIndex] = " . $PostIndex . "";
+$sql = "SELECT ShortName as name FROM SOATO_ТипыУлиц WHERE id <> 999";
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));
+$newArray = array();
 if (sqlsrv_num_fields($stmt) == false) {
     echo "No rows returned.";
 } else {
     $i = 0;
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        $array[$i] = $row['City'];
+        $newArray[$i] = array(
+            'name' => $row['name']);
         $i++;
     }
 }
 sqlsrv_close($conn);
-foreach ($array as $value) {
-    echo "<option value='" . $value . "'>" . $value . "</option>";
-}
+echo json_encode($newArray, JSON_UNESCAPED_UNICODE);
 ?>
