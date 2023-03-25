@@ -35,7 +35,9 @@
                 <input type="text" id="area" placeholder="Область" list="areaData" value="Гомельская">
                 <datalist id="areaData">
                 </datalist>
-                <input type="text" id="city" placeholder="Город" list="cityData" value="Гомель">
+                <input type="text" id="city" placeholder="Город" list="cityData" value="Гомель" onclick="getCity()">
+                <datalist id="cityData">
+                </datalist>
                 <input type="text" id="settlementType" placeholder="Тип населённого пункта" list="settlementTypeData">
                 <datalist id="settlementTypeData">
                 </datalist>

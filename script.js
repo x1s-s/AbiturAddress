@@ -184,6 +184,37 @@ function editCheckedPostIndex(){
     $('#postIndexCheckModal').modal('hide');
 }
 
+function getCity(){
+    if (document.getElementById("country").value !== "Беларусь")
+        return;
+    var area = document.getElementById("area").value;
+    if(area === "") {
+        return;
+    }
+    var select = document.getElementById("cityData");
+    if(select.children.length !== 0)
+        return;
+    select.innerHTML = "";
+    $.ajax(
+        {
+            url: url + "getCity.php",
+            type: "GET",
+            data: {area: area},
+            success: function (data) {
+                var obj = JSON.parse(data);
+                console.log(obj)
+                var select = document.getElementById("cityData");
+                for (var i = 0; i < obj.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = obj[i]['name'];
+                    option.innerHTML = obj[i]['name'];
+                    select.appendChild(option);
+                }
+            }
+        }
+    )
+}
+
 function putToDatabase(){
     var postIndex = document.getElementById("postIndex").value;
     var country = document.getElementById("country").value;
