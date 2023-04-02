@@ -32,6 +32,8 @@
             <div class="modal-body">
                 <input type="text" id="postIndex" placeholder="Почтовый адрес" onblur="startFromPostIndex()">
                 <input type="text" id="country" placeholder="Страна" list="countryData" value="Беларусь">
+                <datalist id="countryData">
+                </datalist>
                 <input type="text" id="area" placeholder="Область" list="areaData" value="Гомельская">
                 <datalist id="areaData">
                 </datalist>
@@ -41,7 +43,9 @@
                 <input type="text" id="settlementType" placeholder="Тип населённого пункта" list="settlementTypeData">
                 <datalist id="settlementTypeData">
                 </datalist>
-                <input type="text" id="settlement" placeholder="Населённый пункт" onblur="checkPostIndex()" list="settlementData">
+                <input type="text" id="settlement" placeholder="Населённый пункт" onblur="checkSettlementInput()" onclick="getSettlement()" list="settlementData">
+                <datalist id="settlementData">
+                </datalist>
                 <input type="text" id="streetType" placeholder="Тип улицы" list="streetTypeData">
                 <datalist id="streetTypeData">
                 </datalist>
@@ -75,12 +79,6 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid" id="postIndexVariants">
-                    <div class="row">
-                        <div class="col-md-3">Область</div>
-                        <div class="col-md-3">Город</div>
-                        <div class="col-md-3">Тип населенного пункта</div>
-                        <div class="col-md-3">Населённый пункт</div>
-                    </div>
                 </div>
             </div>
             <div class="modal-footer">

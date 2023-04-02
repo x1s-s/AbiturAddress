@@ -14,7 +14,7 @@ SOATO_НаселенныеПункты.TypeNS AS SettlementType
 FROM SOATO_ПочтовыеИндексы, SOATO_ГородаРайоны, SOATO_НаселенныеПункты, SOATO_Области
 WHERE PostIndex = ". $postIndex . "
 AND SOATO_Области.Id = SOATO_ПочтовыеИндексы.КодОбласти
-AND SOATO_ГородаРайоны.IdRegion = SOATO_НаселенныеПункты.IdRegion
+AND (SOATO_ГородаРайоны.SOATO = SOATO_НаселенныеПункты.SOATO OR SOATO_ГородаРайоны.IdRegion = SOATO_НаселенныеПункты.IdRegion)
 AND SOATO_НаселенныеПункты.SOATO = SOATO_ПочтовыеИндексы.SOATO";
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));

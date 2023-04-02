@@ -1,7 +1,7 @@
-var url = window.location.href;
+const url = window.location.href;
 
 function startFromPostIndex() {
-    var postIndex = document.getElementById("postIndex").value;
+    const postIndex = document.getElementById("postIndex").value;
     if(postIndex.length !== 6)
         return;
     $.ajax(
@@ -10,7 +10,7 @@ function startFromPostIndex() {
             type: "GET",
             data: {postIndex: postIndex},
             success: function (data) {
-                var obj = JSON.parse(data);
+                const obj = JSON.parse(data);
                 if (obj.length === 1) {
                     document.getElementById("area").value = obj[0]['Region'];
                     document.getElementById("city").value = obj[0]['City'];
@@ -18,10 +18,15 @@ function startFromPostIndex() {
                     document.getElementById("settlementType").value = obj[0]['SettlementType'];
                 }
                 if(obj.length > 1){
-                    alert("Найдено несколько совпадений. Пожалуйста, уточните адрес.");
                     $('#postIndexModal').modal('show');
-                    var select = document.getElementById("postIndexVariants");
-                    for (var i = 0; i < obj.length; i++) {
+                    const select = document.getElementById("postIndexVariants");
+                    select.innerHTML = "<div class=\"row\">\n" +
+                        "                        <div class=\"col-md-3\">Область</div>\n" +
+                        "                        <div class=\"col-md-3\">Город</div>\n" +
+                        "                        <div class=\"col-md-3\">Тип населенного пункта</div>\n" +
+                        "                        <div class=\"col-md-3\">Населённый пункт</div>\n" +
+                        "                    </div>";
+                    for (let i = 0; i < obj.length; i++) {
                         select.innerHTML +=
                             "<div class='row'>" +
                             "<button class='btn-group' onclick='getSelectedByPostIndex(" + i + ")'>" +
@@ -37,11 +42,11 @@ function startFromPostIndex() {
     )
 }
 
-function getSelectedByPostIndex(elementNumer) {
-    var area = document.getElementById("col1" + elementNumer).innerText;
-    var city = document.getElementById("col2" + elementNumer).innerText;
-    var settlementType = document.getElementById("col3" + elementNumer).innerText;
-    var settlement = document.getElementById("col4" + elementNumer).innerText;
+function getSelectedByPostIndex(elementNumber) {
+    const area = document.getElementById("col1" + elementNumber).innerText;
+    const city = document.getElementById("col2" + elementNumber).innerText;
+    const settlementType = document.getElementById("col3" + elementNumber).innerText;
+    const settlement = document.getElementById("col4" + elementNumber).innerText;
     document.getElementById("area").value = area;
     document.getElementById("city").value = city;
     document.getElementById("settlement").value = settlement;
@@ -54,6 +59,7 @@ function loadData() {
     loadSettlementType();
     loadStreetType();
     loadArea();
+    loadCountry();
 }
 
 function loadSettlementType() {
@@ -62,10 +68,10 @@ function loadSettlementType() {
             url: url + "getSettlementType.php",
             type: "GET",
             success: function (data) {
-                var obj = JSON.parse(data);
-                var select = document.getElementById("settlementTypeData");
-                for (var i = 0; i < obj.length; i++) {
-                    var option = document.createElement("option");
+                const obj = JSON.parse(data);
+                const select = document.getElementById("settlementTypeData");
+                for (let i = 0; i < obj.length; i++) {
+                    const option = document.createElement("option");
                     option.value = obj[i]['CodeSOATO'];
                     option.innerHTML = obj[i]['CodeSOATO'];
                     select.appendChild(option);
@@ -81,10 +87,10 @@ function loadStreetType() {
             url: url + "getStreetType.php",
             type: "GET",
             success: function (data) {
-                var obj = JSON.parse(data);
-                var select = document.getElementById("streetTypeData");
-                for (var i = 0; i < obj.length; i++) {
-                    var option = document.createElement("option");
+                const obj = JSON.parse(data);
+                const select = document.getElementById("streetTypeData");
+                for (let i = 0; i < obj.length; i++) {
+                    const option = document.createElement("option");
                     option.value = obj[i]['name'];
                     option.innerHTML = obj[i]['name'];
                     select.appendChild(option);
@@ -94,16 +100,35 @@ function loadStreetType() {
     );
 }
 
+function loadCountry() {
+    $.ajax(
+        {
+            url: url + "getCountry.php",
+            type: "GET",
+            success: function (data) {
+                const obj = JSON.parse(data);
+                const select = document.getElementById("countryData");
+                for (let i = 0; i < obj.length; i++) {
+                    const option = document.createElement("option");
+                    option.value = obj[i]['name'];
+                    option.innerHTML = obj[i]['name'];
+                    select.appendChild(option);
+                }
+            }
+        }
+    )
+}
+
 function loadArea() {
     $.ajax(
         {
             url: url + "getArea.php",
             type: "GET",
             success: function (data) {
-                var obj = JSON.parse(data);
-                var select = document.getElementById("areaData");
-                for (var i = 0; i < obj.length; i++) {
-                    var option = document.createElement("option");
+                const obj = JSON.parse(data);
+                const select = document.getElementById("areaData");
+                for (let i = 0; i < obj.length; i++) {
+                    const option = document.createElement("option");
                     option.value = obj[i]['name'];
                     option.innerHTML = obj[i]['name'];
                     select.appendChild(option);
@@ -114,9 +139,9 @@ function loadArea() {
 }
 
 function getStreet(){
-    var settlement = document.getElementById("settlement").value;
-    var settlementType = document.getElementById("settlementType").value;
-    var select = document.getElementById("streetData");
+    const settlement = document.getElementById("settlement").value;
+    const settlementType = document.getElementById("settlementType").value;
+    const select = document.getElementById("streetData");
     select.innerHTML = "";
     if(settlement !== "" && settlementType !== ""){
         $.ajax(
@@ -125,10 +150,10 @@ function getStreet(){
                 type: "GET",
                 data: {settlement: settlement, settlementType: settlementType},
                 success: function (data) {
-                    var obj = JSON.parse(data);
-                    var select = document.getElementById("streetData");
-                    for (var i = 0; i < obj.length; i++) {
-                        var option = document.createElement("option");
+                    const obj = JSON.parse(data);
+                    const select = document.getElementById("streetData");
+                    for (let i = 0; i < obj.length; i++) {
+                        const option = document.createElement("option");
                         option.value = obj[i]['name'];
                         option.innerHTML = obj[i]['name'];
                         select.appendChild(option);
@@ -139,10 +164,37 @@ function getStreet(){
     }
 }
 
+function getSettlement(){
+    const area = document.getElementById("area").value;
+    const city = document.getElementById("city").value;
+    const select = document.getElementById("settlementData");
+    select.innerHTML = "";
+    if(area !== "" && city !== ""){
+        $.ajax(
+            {
+                url: url + "getSettlement.php",
+                type: "GET",
+                data: {area: area, city: city},
+                success: function (data) {
+                    const obj = JSON.parse(data);
+                    const select = document.getElementById("settlementData");
+                    for (let i = 0; i < obj.length; i++) {
+                        const option = document.createElement("option");
+                        option.value = obj[i]['name'];
+                        option.innerHTML = obj[i]['name'];
+                        select.appendChild(option);
+                    }
+                    document.getElementById("settlement").focus();
+                }
+            }
+        )
+    }
+}
+
 function checkPostIndex(){
-    var postIndex = document.getElementById("postIndex").value;
-    var settlement = document.getElementById("settlement").value;
-    var settlementType = document.getElementById("settlementType").value;
+    const postIndex = document.getElementById("postIndex").value;
+    const settlement = document.getElementById("settlement").value;
+    const settlementType = document.getElementById("settlementType").value;
     if(settlement !== "" && settlementType !== ""){
         $.ajax(
             {
@@ -150,7 +202,7 @@ function checkPostIndex(){
                 type: "GET",
                 data: {settlement: settlement, settlementType: settlementType},
                 success: function (data) {
-                    var obj = JSON.parse(data);
+                    const obj = JSON.parse(data);
                     if(obj.length > 1){
                         var count = 0
                         for (let i = 0; i < obj.length; i++) {
@@ -166,7 +218,7 @@ function checkPostIndex(){
                         if(postIndex === ""){
                             document.getElementById("postIndex").value = obj[0]['postIndex'];
                         } else {
-                            var select = document.getElementById("checkVariant");
+                            const select = document.getElementById("checkVariant");
                             select.innerHTML = "Данный населенный пункт имеет почтовый индекс <b id = \"postIndexCheckVariant\">" + obj[0]['postIndex'] + "</b>. Заменить его?";
                             $('#postIndexCheckModal').modal('show');
                         }
@@ -177,23 +229,52 @@ function checkPostIndex(){
     }
 }
 
+function checkSettlementInput(){
+    checkPostIndex()
+    checkSettlementType()
+}
+
 function editCheckedPostIndex(){
-    var postIndex = document.getElementById("postIndexCheckVariant").innerText;
+    const postIndex = document.getElementById("postIndexCheckVariant").innerText;
     document.getElementById("postIndex").value = postIndex;
-    console.log(postIndex)
     $('#postIndexCheckModal').modal('hide');
+}
+
+function checkSettlementType(){
+    const country = document.getElementById("country").value;
+    if(country !== "Беларусь"){
+        return;
+    }
+    const postIndex = document.getElementById("postIndex").value;
+    const settlement = document.getElementById("settlement").value;
+    if(settlement === "" || postIndex === ""){
+        return;
+    }
+    $.ajax(
+        {
+            url: url + "checkSettlementType.php",
+            type: "GET",
+            data: {postIndex: postIndex,settlement: settlement},
+            success: function (data) {
+                const obj = JSON.parse(data);
+                if(obj.length === 1){
+                    document.getElementById("settlementType").value = obj[0]['name'];
+                }
+            }
+        }
+    );
+
+
 }
 
 function getCity(){
     if (document.getElementById("country").value !== "Беларусь")
         return;
-    var area = document.getElementById("area").value;
+    const area = document.getElementById("area").value;
     if(area === "") {
         return;
     }
-    var select = document.getElementById("cityData");
-    if(select.children.length !== 0)
-        return;
+    const select = document.getElementById("cityData");
     select.innerHTML = "";
     $.ajax(
         {
@@ -210,30 +291,31 @@ function getCity(){
                     option.innerHTML = obj[i]['name'];
                     select.appendChild(option);
                 }
+                document.getElementById("city").focus();
             }
         }
     )
 }
 
 function putToDatabase(){
-    var postIndex = document.getElementById("postIndex").value;
-    var country = document.getElementById("country").value;
-    var area = document.getElementById("area").value;
-    var city = document.getElementById("city").value;
-    var settlement = document.getElementById("settlement").value;
-    var settlementType = document.getElementById("settlementType").value;
-    var street = document.getElementById("street").value;
-    var streetType = document.getElementById("streetType").value;
-    var korpusOrBuilding = "";
+    const postIndex = document.getElementById("postIndex").value;
+    const country = document.getElementById("country").value;
+    const area = document.getElementById("area").value;
+    const city = document.getElementById("city").value;
+    const settlement = document.getElementById("settlement").value;
+    const settlementType = document.getElementById("settlementType").value;
+    const street = document.getElementById("street").value;
+    const streetType = document.getElementById("streetType").value;
+    let korpusOrBuilding = "";
     if(document.getElementById("korpus").value !== 0){
         korpusOrBuilding = "к. " + document.getElementById("korpusOrBuilding").value;
     }
     if(document.getElementById("building").value !== 0){
         korpusOrBuilding = "с. " + document.getElementById("korpusOrBuilding").value;
     }
-    var house = document.getElementById("house").value;
-    var flat = document.getElementById("flat").value;
-    var fio = document.getElementById("fio").value;
+    const house = document.getElementById("house").value;
+    const flat = document.getElementById("flat").value;
+    const fio = document.getElementById("fio").value;
     $.ajax(
         {
             url: url + "putToDatabase.php",
