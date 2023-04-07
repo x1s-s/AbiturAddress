@@ -31,7 +31,7 @@
             </div>
             <div class="modal-body">
                 <input type="text" id="postIndex" placeholder="Почтовый адрес" onblur="startFromPostIndex()">
-                <input type="text" id="country" placeholder="Страна" list="countryData" value="Беларусь">
+                <input type="text" id="country" placeholder="Страна" list="countryData" value="Беларусь" onblur="checkArea()">
                 <datalist id="countryData">
                 </datalist>
                 <input type="text" id="area" placeholder="Область" list="areaData" value="Гомельская">

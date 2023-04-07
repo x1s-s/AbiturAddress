@@ -282,11 +282,10 @@ function getCity(){
             type: "GET",
             data: {area: area},
             success: function (data) {
-                var obj = JSON.parse(data);
-                console.log(obj)
-                var select = document.getElementById("cityData");
-                for (var i = 0; i < obj.length; i++) {
-                    var option = document.createElement("option");
+                const obj = JSON.parse(data);
+                const select = document.getElementById("cityData");
+                for (let i = 0; i < obj.length; i++) {
+                    const option = document.createElement("option");
                     option.value = obj[i]['name'];
                     option.innerHTML = obj[i]['name'];
                     select.appendChild(option);
@@ -328,4 +327,12 @@ function putToDatabase(){
     )
 }
 
+function checkArea(){
+    const country = document.getElementById("country").value;
+    const area = document.getElementById("areaData");
+    area.innerHTML=""
+    if(country === "Беларусь"){
+        loadArea()
+    }
+}
 
