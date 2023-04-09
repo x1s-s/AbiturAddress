@@ -2,7 +2,8 @@ const url = window.location.href;
 
 function startFromPostIndex() {
     const postIndex = document.getElementById("postIndex").value;
-    if(postIndex.length !== 6)
+    const settlement = document.getElementById("settlement").value;
+    if(postIndex.length !== 6 || settlement !== "")
         return;
     $.ajax(
         {
@@ -330,7 +331,11 @@ function putToDatabase(){
 function checkArea(){
     const country = document.getElementById("country").value;
     const area = document.getElementById("areaData");
+    const city = document.getElementById("cityData");
+    const settlement = document.getElementById("settlementData");
     area.innerHTML=""
+    city.innerHTML=""
+    settlement.innerHTML=""
     if(country === "Беларусь"){
         loadArea()
     }
