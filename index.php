@@ -31,21 +31,24 @@
             </div>
             <div class="modal-body">
                 <input type="text" id="postIndex" placeholder="Почтовый адрес" onblur="startFromPostIndex()">
-                <input type="text" id="country" placeholder="Страна" list="countryData" value="Беларусь" onblur="checkArea()">
+                <input type="text" id="country" placeholder="Страна" list="countryData" value="Беларусь"
+                       onblur="checkArea()">
                 <datalist id="countryData">
                 </datalist>
                 <input type="text" id="area" placeholder="Область" list="areaData" value="Гомельская">
                 <datalist id="areaData">
                 </datalist>
-                <input type="text" id="city" placeholder="Город" list="cityData" value="Гомель" onclick="getCity()">
+                <input type="text" id="city" placeholder="Город" list="cityData" value="Гомель" onfocus="getCity()">
                 <datalist id="cityData">
                 </datalist>
-                <input type="text" id="settlementType" placeholder="Тип населённого пункта" list="settlementTypeData">
-                <datalist id="settlementTypeData">
-                </datalist>
-                <input type="text" id="settlement" placeholder="Населённый пункт" onblur="checkSettlementInput()" onclick="getSettlement()" list="settlementData">
-                <datalist id="settlementData">
-                </datalist>
+                <div>
+                    <select id="settlementType">
+                    </select>
+                    <input type="text" id="settlement" placeholder="Населённый пункт" onblur="checkSettlementInput()"
+                           onfocus="getSettlement()" list="settlementData">
+                    <datalist id="settlementData">
+                    </datalist>
+                </div>
                 <input type="text" id="streetType" placeholder="Тип улицы" list="streetTypeData">
                 <datalist id="streetTypeData">
                 </datalist>
@@ -101,7 +104,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть без измениений</button>
-                <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal" onclick="editCheckedPostIndex()">Изменить почтовый индекс</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        onclick="editCheckedPostIndex()">Изменить почтовый индекс
+                </button>
             </div>
         </div>
     </div>

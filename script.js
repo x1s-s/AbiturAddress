@@ -2,8 +2,7 @@ const url = window.location.href;
 
 function startFromPostIndex() {
     const postIndex = document.getElementById("postIndex").value;
-    const settlement = document.getElementById("settlement").value;
-    if(postIndex.length !== 6 || settlement !== "")
+    if(postIndex.length !== 6)
         return;
     $.ajax(
         {
@@ -70,7 +69,7 @@ function loadSettlementType() {
             type: "GET",
             success: function (data) {
                 const obj = JSON.parse(data);
-                const select = document.getElementById("settlementTypeData");
+                const select = document.getElementById("settlementType");
                 for (let i = 0; i < obj.length; i++) {
                     const option = document.createElement("option");
                     option.value = obj[i]['CodeSOATO'];
@@ -185,7 +184,6 @@ function getSettlement(){
                         option.innerHTML = obj[i]['name'];
                         select.appendChild(option);
                     }
-                    document.getElementById("settlement").focus();
                 }
             }
         )
@@ -291,7 +289,6 @@ function getCity(){
                     option.innerHTML = obj[i]['name'];
                     select.appendChild(option);
                 }
-                document.getElementById("city").focus();
             }
         }
     )
