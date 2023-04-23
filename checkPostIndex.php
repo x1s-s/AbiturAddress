@@ -8,7 +8,7 @@ $connectionInfo = array(
     "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "SELECT PostIndex FROM SOATO_ПочтовыеИндексы WHERE SOATO = 
+$sql = "SELECT PostIndex FROM SOATO_ПочтовыеИндексы WHERE SOATO IN
                                                (SELECT SOATO FROM SOATO_НаселенныеПункты WHERE Name = '". $settlement ."' AND TypeNS = '". $settlementType ."')";
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));

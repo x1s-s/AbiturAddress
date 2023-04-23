@@ -8,14 +8,13 @@ $connectionInfo = array(
     "Database" => $argc['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-//echo substr($city, -7);
 $sql = '';
 if(substr($city, -7) == 'р-он'){
-    $sql = "SELECT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
+    $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
   WHERE IdRegion = (SELECT [IdRegion] FROM [AbiturSOATO].[dbo].[SOATO_ГородаРайоны] WHERE [Name] = '".$city."')
   AND IdOblast = (SELECT [Id] FROM [AbiturSOATO].[dbo].[SOATO_Области] WHERE [Name] = '".$area."')";
 } else {
-    $sql = "SELECT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
+    $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
   WHERE IdRegion IS NULL
   AND IdOblast = (SELECT [Id] FROM [AbiturSOATO].[dbo].[SOATO_Области] WHERE [Name] = '".$area."')";
 }

@@ -1,5 +1,10 @@
 const url = window.location.href;
+//TODO: Сделать автоматический ввод типа населенного пункта
+//TODO: Сделать запись в новую таблицу
 
+function getAddressDataFromLogin(){
+
+}
 function startFromPostIndex() {
     const postIndex = document.getElementById("postIndex").value;
     if(postIndex.length !== 6)
@@ -51,6 +56,7 @@ function getSelectedByPostIndex(elementNumber) {
     document.getElementById("city").value = city;
     document.getElementById("settlement").value = settlement;
     document.getElementById("settlementType").value = settlementType;
+    inputSettlement();
     $('#postIndexModal').modal('hide');
     $('#exampleModal').modal('show');
 }
@@ -88,7 +94,7 @@ function loadStreetType() {
             type: "GET",
             success: function (data) {
                 const obj = JSON.parse(data);
-                const select = document.getElementById("streetTypeData");
+                const select = document.getElementById("streetType");
                 for (let i = 0; i < obj.length; i++) {
                     const option = document.createElement("option");
                     option.value = obj[i]['name'];
@@ -209,7 +215,7 @@ function checkPostIndex(){
                                 count++
                             }
                         }
-                        if(count === 0){
+                        if(count === 0 && postIndex !== ""){
                             alert("Почтовый индекс не соответствует выбранному населенному пункту. Пожалуйста, уточните адрес.");
                         }
                     }
@@ -217,9 +223,11 @@ function checkPostIndex(){
                         if(postIndex === ""){
                             document.getElementById("postIndex").value = obj[0]['postIndex'];
                         } else {
-                            const select = document.getElementById("checkVariant");
-                            select.innerHTML = "Данный населенный пункт имеет почтовый индекс <b id = \"postIndexCheckVariant\">" + obj[0]['postIndex'] + "</b>. Заменить его?";
-                            $('#postIndexCheckModal').modal('show');
+                            if(postIndex !== obj[0]['postIndex']) {
+                                const select = document.getElementById("checkVariant");
+                                select.innerHTML = "Данный населенный пункт имеет почтовый индекс <b id = \"postIndexCheckVariant\">" + obj[0]['postIndex'] + "</b>. Заменить его?";
+                                $('#postIndexCheckModal').modal('show');
+                            }
                         }
                     }
                 }
@@ -234,8 +242,7 @@ function checkSettlementInput(){
 }
 
 function editCheckedPostIndex(){
-    const postIndex = document.getElementById("postIndexCheckVariant").innerText;
-    document.getElementById("postIndex").value = postIndex;
+    document.getElementById("postIndex").value = document.getElementById("postIndexCheckVariant").innerText;
     $('#postIndexCheckModal').modal('hide');
 }
 
@@ -244,24 +251,32 @@ function checkSettlementType(){
     if(country !== "Беларусь"){
         return;
     }
-    const postIndex = document.getElementById("postIndex").value;
     const settlement = document.getElementById("settlement").value;
-    if(settlement === "" || postIndex === ""){
-        return;
-    }
-    $.ajax(
-        {
-            url: url + "checkSettlementType.php",
-            type: "GET",
-            data: {postIndex: postIndex,settlement: settlement},
-            success: function (data) {
-                const obj = JSON.parse(data);
-                if(obj.length === 1){
-                    document.getElementById("settlementType").value = obj[0]['name'];
+    const city = document.getElementById("city").value;
+    if(city !== '' && settlement !== ''){
+        $.ajax(
+            {
+                url: url + "checkSettlementType.php",
+                type: "GET",
+                data: {settlement: settlement, city: city},
+                success: function (data) {
+                    const obj = JSON.parse(data);
+                    if(obj.length === 1){
+                        document.getElementById("settlementType").value = obj[0]['name'];
+                    } else {
+                        const select = document.getElementById("settlementType");
+                        select.innerHTML = "";
+                        for (let i = 0; i < obj.length; i++) {
+                            const option = document.createElement("option");
+                            option.value = obj[i]['name'];
+                            option.innerHTML = obj[i]['name'];
+                            select.appendChild(option);
+                        }
+                    }
                 }
             }
-        }
-    );
+        )
+    }
 
 
 }
@@ -292,6 +307,28 @@ function getCity(){
             }
         }
     )
+}
+
+function enableInput(){
+    document.getElementById("korpusOrBuilding").disabled = false;
+}
+
+function inputSettlement(){
+    const city = document.getElementById("city").value.toString();
+    const settlement = document.getElementById("settlement");
+    const settlementType = document.getElementById("settlementType");
+    const country = document.getElementById("country").value;
+    if(city.substring(city.length - 4) !== 'р-он' && country === "Беларусь"){
+        settlement.value = city;
+        settlement.disabled = true;
+        settlementType.value = "г.";
+        settlementType.innerHTML = "<option value = \"г.\">г.</option>";
+        settlementType.disabled = true;
+    } else {
+        settlement.disabled = false;
+        settlementType.disabled = false;
+        getSettlement();
+    }
 }
 
 function putToDatabase(){

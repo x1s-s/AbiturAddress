@@ -1,6 +1,6 @@
 <?php
 $settlement = $_GET['settlement'];
-$postIndex = $_GET['postIndex'];
+$city = $_GET['city'];
 $args = include 'db.php';
 $serverName = $args['dsn'];
 $connectionInfo = array(
@@ -8,7 +8,9 @@ $connectionInfo = array(
     "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "SELECT TypeNS FROM [SOATO_ПочтовыеИндексы] WHERE PostIndex = ". $postIndex ." AND City = '". $settlement ."'";
+$sql = "SELECT TypeNS 
+FROM SOATO_ГородаРайоны INNER JOIN SOATO_НаселенныеПункты ON SOATO_ГородаРайоны.IdREgion = SOATO_НаселенныеПункты.IdREgion 
+WHERE SOATO_ГородаРайоны.Name = '" . $city . "' AND SOATO_НаселенныеПункты.Name = '" . $settlement . "'";
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));
 $newArray = array();
