@@ -1,6 +1,6 @@
 <?php
 return [
-    'dsn' => 'HOME-PC',
+    'dsn' => 'HOME-PC   ',
     'database' => 'AbiturSOATO',
     'charset' => 'UTF-8',
 ];
