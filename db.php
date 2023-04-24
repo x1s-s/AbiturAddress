@@ -1,6 +1,6 @@
 <?php
 return [
-    'dsn' => 'F1L1N\SQLExpress',
+    'dsn' => 'HOME-PC',
     'database' => 'AbiturSOATO',
     'charset' => 'UTF-8',
 ];
