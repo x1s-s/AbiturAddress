@@ -1,9 +1,41 @@
 const url = window.location.href;
-//TODO: Сделать автоматический ввод типа населенного пункта
 //TODO: Сделать запись в новую таблицу
+//TODO: Сделать дописку с сельсоветом
 
 function getAddressDataFromLogin(){
-
+    $.ajax(
+        {
+            url: url + "getDataFromLogin.php",
+            type: "GET",
+            data : {login: document.getElementById("login").value},
+            success: function (data) {
+                const obj = JSON.parse(data);
+                console.log(obj);
+                if(obj.length >= 1){
+                    document.getElementById("postIndex").value = obj[0]['postIndex'];
+                    document.getElementById("country").value = obj[0]['country'];
+                    document.getElementById("area").value = obj[0]['area'];
+                    document.getElementById("city").value = obj[0]['city'];
+                    document.getElementById("settlementType").value = obj[0]['settlementType'];
+                    if(obj[0]['settlementType'] === 'г.'){
+                        document.getElementById('settlement').value = obj[0]['city'];
+                        document.getElementById('settlement').disabled = true;
+                        document.getElementById("settlementType").disabled = true;
+                    } else {
+                        document.getElementById('settlement').value = obj[0]['settlement'];
+                    }
+                    document.getElementById("streetType").value = obj[0]['streetType'];
+                    document.getElementById("street").value = obj[0]['street'];
+                    if(obj[0]['haveKorpus'] === 1){
+                        document.getElementById('korpusOrBuilding').disabled = false;
+                        document.getElementById('korpusOrBuilding').value = obj[0]['korpus'];
+                    }
+                    document.getElementById('house').value = obj[0]['house'];
+                    document.getElementById('flat').value = obj[0]['flat'];
+                }
+            }
+        }
+    );
 }
 function startFromPostIndex() {
     const postIndex = document.getElementById("postIndex").value;
@@ -66,6 +98,7 @@ function loadData() {
     loadStreetType();
     loadArea();
     loadCountry();
+    inputSettlement();
 }
 
 function loadSettlementType() {

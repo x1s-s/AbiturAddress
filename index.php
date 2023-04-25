@@ -16,7 +16,7 @@
 
 <body>
 <div style="margin-top: 15px">
-    <input type="text" placeholder="Login">
+    <input type="text" id="login" placeholder="Login">
     <button onclick="getAddressDataFromLogin()">Войти</button>
 </div>
 
@@ -65,7 +65,6 @@
                 </div>
                 <input type="text" id="house" placeholder="Дом">
                 <input type="text" id="flat" placeholder="Квартира">
-                <input type="text" id="fio" placeholder="ФИО">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
