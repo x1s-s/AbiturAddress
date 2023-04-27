@@ -1,6 +1,7 @@
 <?php
 $settlement = $_GET['settlement'];
 $settlementType = $_GET['settlementType'];
+$ruralCouncil = $_GET['ruralCouncil'];
 $args = include 'db.php';
 $serverName = $args['dsn'];
 $connectionInfo = array(
@@ -8,8 +9,13 @@ $connectionInfo = array(
     "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "SELECT PostIndex FROM SOATO_ПочтовыеИндексы WHERE SOATO IN
-                                               (SELECT SOATO FROM SOATO_НаселенныеПункты WHERE Name = '". $settlement ."' AND TypeNS = '". $settlementType ."')";
+if($ruralCouncil == ''){
+    $sql = "SELECT PostIndex FROM SOATO_ПочтовыеИндексы WHERE SOATO IN
+                                               (SELECT SOATO FROM SOATO_НаселенныеПункты WHERE Name = '". $settlement ."' AND TypeNS = '". $settlementType ."') AND Checked = 1";
+} else {
+    $sql = "SELECT PostIndex FROM SOATO_ПочтовыеИндексы WHERE SOATO IN
+                                               (SELECT SOATO FROM SOATO_НаселенныеПункты WHERE Name = '". $settlement ."' AND SelSovet = '".$ruralCouncil."' AND TypeNS = '". $settlementType ."') AND Checked = 1";
+}
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));
 $newArray = array();

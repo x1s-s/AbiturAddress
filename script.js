@@ -1,6 +1,5 @@
 const url = window.location.href;
 //TODO: Сделать запись в новую таблицу
-//TODO: Сделать дописку с сельсоветом
 
 function getAddressDataFromLogin(){
     $.ajax(
@@ -9,6 +8,7 @@ function getAddressDataFromLogin(){
             type: "GET",
             data : {login: document.getElementById("login").value},
             success: function (data) {
+                console.log(data);
                 const obj = JSON.parse(data);
                 console.log(obj);
                 if(obj.length >= 1){
@@ -23,11 +23,17 @@ function getAddressDataFromLogin(){
                         document.getElementById("settlementType").disabled = true;
                     } else {
                         document.getElementById('settlement').value = obj[0]['settlement'];
+                        document.getElementById('settlement').disabled = false;
+                        document.getElementById("settlementType").disabled = false;
                     }
                     document.getElementById("streetType").value = obj[0]['streetType'];
                     document.getElementById("street").value = obj[0]['street'];
                     if(obj[0]['haveKorpus'] === 1){
-                        document.getElementById('korpusOrBuilding').disabled = false;
+                        document.getElementById("korpus").click();
+                        document.getElementById('korpusOrBuilding').value = obj[0]['korpus'];
+                    }
+                    if(obj[0]['haveKorpus'] === 2){
+                        document.getElementById("building").click();
                         document.getElementById('korpusOrBuilding').value = obj[0]['korpus'];
                     }
                     document.getElementById('house').value = obj[0]['house'];
@@ -51,7 +57,15 @@ function startFromPostIndex() {
                 if (obj.length === 1) {
                     document.getElementById("area").value = obj[0]['Region'];
                     document.getElementById("city").value = obj[0]['City'];
-                    document.getElementById("settlement").value = obj[0]['Settlement'];
+                    if(obj[0]['City'].includes("р-он")){
+                        document.getElementById("settlement").disabled = false;
+                        document.getElementById("settlementType").disabled = false;
+                    }
+                    if(obj[0]['RuralCouncil'] !== ""){
+                        document.getElementById("settlement").value = obj[0]['Settlement'] + " с-совет : " + obj[0]['RuralCouncil'];
+                    } else {
+                        document.getElementById("settlement").value = obj[0]['Settlement'];
+                    }
                     document.getElementById("settlementType").value = obj[0]['SettlementType'];
                 }
                 if(obj.length > 1){
@@ -64,14 +78,26 @@ function startFromPostIndex() {
                         "                        <div class=\"col-md-3\">Населённый пункт</div>\n" +
                         "                    </div>";
                     for (let i = 0; i < obj.length; i++) {
-                        select.innerHTML +=
-                            "<div class='row'>" +
-                            "<button class='btn-group' onclick='getSelectedByPostIndex(" + i + ")'>" +
-                            "<div class='col-md-3' id='col1" + i + "'>" + obj[i]['Region'] + "</div>" +
-                            "<div class='col-md-3' id='col2" + i + "'>" + obj[i]['City'] + "</div>" +
-                            "<div class='col-md-3' id='col3" + i + "'>" + obj[i]['SettlementType'] + "</div>" +
-                            "<div class='col-md-3' id='col4" + i + "'>" + obj[i]['Settlement'] + "</div>" +
-                            "</button></div>";
+                        if((i !== 0 && obj[i - 1]['Settlement'] === obj[i]['Settlement'])
+                            || (i !== obj.length - 1 && obj[i + 1]['Settlement'] === obj[i]['Settlement'])){
+                            select.innerHTML +=
+                                "<div class='row'>" +
+                                "<button class='btn-group' onclick='getSelectedByPostIndex(" + i + ")'>" +
+                                "<div class='col-md-3' id='col1" + i + "'>" + obj[i]['Region'] + "</div>" +
+                                "<div class='col-md-3' id='col2" + i + "'>" + obj[i]['City'] + "</div>" +
+                                "<div class='col-md-3' id='col3" + i + "'>" + obj[i]['SettlementType'] + "</div>" +
+                                "<div class='col-md-3' id='col4" + i + "'>" + obj[i]['Settlement'] + " с-совет : " + obj[i]['RuralCouncil']  + "</div>" +
+                                "</button></div>";
+                        } else {
+                            select.innerHTML +=
+                                "<div class='row'>" +
+                                "<button class='btn-group' onclick='getSelectedByPostIndex(" + i + ")'>" +
+                                "<div class='col-md-3' id='col1" + i + "'>" + obj[i]['Region'] + "</div>" +
+                                "<div class='col-md-3' id='col2" + i + "'>" + obj[i]['City'] + "</div>" +
+                                "<div class='col-md-3' id='col3" + i + "'>" + obj[i]['SettlementType'] + "</div>" +
+                                "<div class='col-md-3' id='col4" + i + "'>" + obj[i]['Settlement'] + "</div>" +
+                                "</button></div>";
+                        }
                     }
                 }
             }
@@ -99,6 +125,7 @@ function loadData() {
     loadArea();
     loadCountry();
     inputSettlement();
+    setTimeout(getAddressDataFromLogin, 100)
 }
 
 function loadSettlementType() {
@@ -108,6 +135,9 @@ function loadSettlementType() {
             type: "GET",
             success: function (data) {
                 const obj = JSON.parse(data);
+                if(obj.length === 0){
+                    return;
+                }
                 const select = document.getElementById("settlementType");
                 for (let i = 0; i < obj.length; i++) {
                     const option = document.createElement("option");
@@ -178,8 +208,11 @@ function loadArea() {
 }
 
 function getStreet(){
-    const settlement = document.getElementById("settlement").value;
+    let settlement = document.getElementById("settlement").value;
     const settlementType = document.getElementById("settlementType").value;
+    if(settlement.includes("с-совет")){
+        settlement = settlement.split(" с-совет")[0];
+    }
     const select = document.getElementById("streetData");
     select.innerHTML = "";
     if(settlement !== "" && settlementType !== ""){
@@ -189,7 +222,9 @@ function getStreet(){
                 type: "GET",
                 data: {settlement: settlement, settlementType: settlementType},
                 success: function (data) {
+                    console.log(data)
                     const obj = JSON.parse(data);
+                    console.log(obj)
                     const select = document.getElementById("streetData");
                     for (let i = 0; i < obj.length; i++) {
                         const option = document.createElement("option");
@@ -216,11 +251,19 @@ function getSettlement(){
                 data: {area: area, city: city},
                 success: function (data) {
                     const obj = JSON.parse(data);
+                    //добавь ко всем совпадающим полям name в obj поле ruralCouncil
+
                     const select = document.getElementById("settlementData");
                     for (let i = 0; i < obj.length; i++) {
                         const option = document.createElement("option");
-                        option.value = obj[i]['name'];
-                        option.innerHTML = obj[i]['name'];
+                        if((i !== 0 && obj[i - 1]['name'] === obj[i]['name'])
+                            || (i !== obj.length - 1 && obj[i + 1]['name'] === obj[i]['name'])){
+                            option.value = obj[i]['name'] + " с-совет : " + obj[i]['ruralCouncil'];
+                            option.innerHTML = obj[i]['name'] + " с-совет : " + obj[i]['ruralCouncil'];
+                        } else {
+                            option.value = obj[i]['name'];
+                            option.innerHTML = obj[i]['name'];
+                        }
                         select.appendChild(option);
                     }
                 }
@@ -231,18 +274,24 @@ function getSettlement(){
 
 function checkPostIndex(){
     const postIndex = document.getElementById("postIndex").value;
-    const settlement = document.getElementById("settlement").value;
+    let settlement = document.getElementById("settlement").value;
     const settlementType = document.getElementById("settlementType").value;
     if(settlement !== "" && settlementType !== ""){
+        let ruralCouncil = "";
+        if(settlement.includes("с-совет")){
+            ruralCouncil = settlement.split(" с-совет: ")[1];
+            settlement = settlement.split(" с-совет: ")[0];
+        }
         $.ajax(
             {
                 url: url + "checkPostIndex.php",
                 type: "GET",
-                data: {settlement: settlement, settlementType: settlementType},
+                data: {ruralCouncil: ruralCouncil,settlement: settlement, settlementType: settlementType},
                 success: function (data) {
                     const obj = JSON.parse(data);
+                    console.log(obj)
                     if(obj.length > 1){
-                        var count = 0
+                        let count = 0;
                         for (let i = 0; i < obj.length; i++) {
                             if(obj[i]['postIndex'] === postIndex){
                                 count++
@@ -270,8 +319,8 @@ function checkPostIndex(){
 }
 
 function checkSettlementInput(){
-    checkPostIndex()
     checkSettlementType()
+    setTimeout(checkPostIndex, 100);
 }
 
 function editCheckedPostIndex(){
@@ -284,27 +333,29 @@ function checkSettlementType(){
     if(country !== "Беларусь"){
         return;
     }
-    const settlement = document.getElementById("settlement").value;
+    let settlement = document.getElementById("settlement").value;
     const city = document.getElementById("city").value;
+    let ruralCouncil = "";
     if(city !== '' && settlement !== ''){
+        if(settlement.includes("с-совет")){
+            ruralCouncil = settlement.split(" с-совет: ")[1];
+            settlement = settlement.split(" с-совет: ")[0];
+        }
         $.ajax(
             {
                 url: url + "checkSettlementType.php",
                 type: "GET",
-                data: {settlement: settlement, city: city},
+                data: {ruralCouncil: ruralCouncil,settlement: settlement, city: city},
                 success: function (data) {
+                    console.log(data)
                     const obj = JSON.parse(data);
-                    if(obj.length === 1){
-                        document.getElementById("settlementType").value = obj[0]['name'];
-                    } else {
-                        const select = document.getElementById("settlementType");
-                        select.innerHTML = "";
-                        for (let i = 0; i < obj.length; i++) {
-                            const option = document.createElement("option");
-                            option.value = obj[i]['name'];
-                            option.innerHTML = obj[i]['name'];
-                            select.appendChild(option);
-                        }
+                    const select = document.getElementById("settlementType");
+                    select.innerHTML = "";
+                    for (let i = 0; i < obj.length; i++) {
+                        const option = document.createElement("option");
+                        option.value = obj[i]['name'];
+                        option.innerHTML = obj[i]['name'];
+                        select.appendChild(option);
                     }
                 }
             }
@@ -365,30 +416,56 @@ function inputSettlement(){
 }
 
 function putToDatabase(){
+    const login = document.getElementById("login").value;
     const postIndex = document.getElementById("postIndex").value;
     const country = document.getElementById("country").value;
     const area = document.getElementById("area").value;
     const city = document.getElementById("city").value;
-    const settlement = document.getElementById("settlement").value;
+    let settlement = document.getElementById("settlement").value;
+    var ruralCouncil = "";
+    let ruralCouncilNameToAddress = 0;
+    if(settlement.includes("с-совет:")){
+        ruralCouncil = settlement.split(" с-совет: ")[1];
+        settlement = settlement.split(" с-совет: ")[0];
+        ruralCouncilNameToAddress = 1;
+    }
     const settlementType = document.getElementById("settlementType").value;
     const street = document.getElementById("street").value;
     const streetType = document.getElementById("streetType").value;
-    let korpusOrBuilding = "";
-    if(document.getElementById("korpus").value !== 0){
-        korpusOrBuilding = "к. " + document.getElementById("korpusOrBuilding").value;
+    const korpusOrBuilding = document.getElementById("korpusOrBuilding").value;
+    let korpus = 0;
+    if (document.getElementById("korpus").checked){
+        korpus = 1;
     }
-    if(document.getElementById("building").value !== 0){
-        korpusOrBuilding = "с. " + document.getElementById("korpusOrBuilding").value;
+    if (document.getElementById("building").checked){
+        korpus = 2;
     }
     const house = document.getElementById("house").value;
     const flat = document.getElementById("flat").value;
-    const fio = document.getElementById("fio").value;
+    console.log(login, postIndex, country, area, city, settlement, settlementType, street, streetType, korpusOrBuilding, korpus, house, ruralCouncil, flat, ruralCouncilNameToAddress)
     $.ajax(
         {
             url: url + "putToDatabase.php",
             type: "POST",
-            data: {postIndex: postIndex,country: country, area: area, city: city, settlement: settlement, settlementType: settlementType, street: street, streetType: streetType, korpusOrBuilding: korpusOrBuilding, house: house, flat: flat, fio: fio},
+            data: {
+                login: login,
+                postIndex: postIndex,
+                country: country,
+                area: area,
+                city: city,
+                settlement: settlement,
+                settlementType: settlementType,
+                street: street,
+                streetType: streetType,
+                korpusOrBuilding: korpusOrBuilding,
+                korpus: korpus,
+                house: house,
+                ruralCouncil: ruralCouncil,
+                flat: flat,
+                ruralCouncilNameToAddress: ruralCouncilNameToAddress
+            },
             success: function (data) {
+                console.log(data);
                 alert("Данные успешно добавлены в базу данных.");
             }
         }

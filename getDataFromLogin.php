@@ -16,20 +16,37 @@ if (sqlsrv_num_fields($stmt) == false) {
 } else {
     $i = 0;
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        $newArray[$i] = array(
-            'postIndex' => $row['ПочтовыйИндекс'],
-            'country' => $row['Страна'],
-            'area' => $row['ОбластьСтраны'],
-            'city' => $row['ГородРайон'],
-            'settlementType' => $row['ТипНаселенногоПункта'],
-            'settlement' => $row['НаселенныйПункт'],
-            'streetType' => $row['ТипУлицы'],
-            'street' => $row['Улица'],
-            'house' => $row['Дом'],
-            'haveKorpus' => $row['ЕстьКорпус'],
-            'korpus' => $row['Корпус'],
-            'flat' => $row['Квартира']
-        );
+        if($row['Сельсовет'] != ''){
+            $newArray[$i] = array(
+                'postIndex' => $row['ПочтовыйИндекс'],
+                'country' => $row['Страна'],
+                'area' => $row['ОбластьСтраны'],
+                'city' => $row['ГородРайон'],
+                'settlementType' => $row['ТипНаселенногоПункта'],
+                'settlement' => $row['НаселенныйПункт'].' с-совет: '.$row['Сельсовет'],
+                'streetType' => $row['ТипУлицы'],
+                'street' => $row['Улица'],
+                'house' => $row['Дом'],
+                'haveKorpus' => $row['ЕстьКорпус'],
+                'korpus' => $row['Корпус'],
+                'flat' => $row['Квартира']
+            );
+        } else {
+            $newArray[$i] = array(
+                'postIndex' => $row['ПочтовыйИндекс'],
+                'country' => $row['Страна'],
+                'area' => $row['ОбластьСтраны'],
+                'city' => $row['ГородРайон'],
+                'settlementType' => $row['ТипНаселенногоПункта'],
+                'settlement' => $row['НаселенныйПункт'],
+                'streetType' => $row['ТипУлицы'],
+                'street' => $row['Улица'],
+                'house' => $row['Дом'],
+                'haveKorpus' => $row['ЕстьКорпус'],
+                'korpus' => $row['Корпус'],
+                'flat' => $row['Квартира']
+            );
+        }
         $i++;
     }
 }

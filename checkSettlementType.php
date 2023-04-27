@@ -1,6 +1,7 @@
 <?php
 $settlement = $_GET['settlement'];
 $city = $_GET['city'];
+$ruralCouncil = $_GET['ruralCouncil'];
 $args = include 'db.php';
 $serverName = $args['dsn'];
 $connectionInfo = array(
@@ -8,9 +9,15 @@ $connectionInfo = array(
     "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "SELECT TypeNS 
+if($ruralCouncil == ''){
+    $sql = "SELECT TypeNS 
 FROM SOATO_ГородаРайоны INNER JOIN SOATO_НаселенныеПункты ON SOATO_ГородаРайоны.IdREgion = SOATO_НаселенныеПункты.IdREgion 
 WHERE SOATO_ГородаРайоны.Name = '" . $city . "' AND SOATO_НаселенныеПункты.Name = '" . $settlement . "'";
+} else {
+    $sql = "SELECT TypeNS 
+FROM SOATO_ГородаРайоны INNER JOIN SOATO_НаселенныеПункты ON SOATO_ГородаРайоны.IdREgion = SOATO_НаселенныеПункты.IdREgion 
+WHERE SOATO_ГородаРайоны.Name = '" . $city . "' AND SOATO_НаселенныеПункты.Name = '" . $settlement . "' AND SOATO_НаселенныеПункты.SelSovet = '" . $ruralCouncil . "'";
+}
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));
 $newArray = array();

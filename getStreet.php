@@ -1,7 +1,6 @@
 <?php
 $settlement = $_GET['settlement'];
 $settlementType = $_GET['settlementType'];
-$city = $_GET['city'];
 $args = include 'db.php';
 $serverName = $args['dsn'];
 $connectionInfo = array(

@@ -17,7 +17,6 @@
 <body>
 <div style="margin-top: 15px">
     <input type="text" id="login" placeholder="Login">
-    <button onclick="getAddressDataFromLogin()">Войти</button>
 </div>
 
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
@@ -47,7 +46,7 @@
                 <div>
                     <select id="settlementType">
                     </select>
-                    <input type="text" id="settlement" placeholder="Населённый пункт" onblur="checkSettlementInput()" list="settlementData">
+                    <input type="text" id="settlement" placeholder="Населённый пункт" style="width: 65%" onblur="checkSettlementInput()" list="settlementData">
                     <datalist id="settlementData">
                     </datalist>
                 </div>

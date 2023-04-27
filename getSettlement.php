@@ -9,14 +9,14 @@ $connectionInfo = array(
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
 $sql = '';
-if(substr($city, -7) == 'р-он'){
-    $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
-  WHERE IdRegion = (SELECT [IdRegion] FROM [AbiturSOATO].[dbo].[SOATO_ГородаРайоны] WHERE [Name] = '".$city."')
-  AND IdOblast = (SELECT [Id] FROM [AbiturSOATO].[dbo].[SOATO_Области] WHERE [Name] = '".$area."')";
+if (substr($city, -7) == 'р-он') {
+    $sql = "SELECT [Name], SelSovet FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
+  WHERE IdRegion = (SELECT [IdRegion] FROM [AbiturSOATO].[dbo].[SOATO_ГородаРайоны] WHERE [Name] = '" . $city . "')
+  AND IdOblast = (SELECT [Id] FROM [AbiturSOATO].[dbo].[SOATO_Области] WHERE [Name] = '" . $area . "') ORDER BY Name";
 } else {
-    $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
+    $sql = "SELECT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
   WHERE IdRegion IS NULL
-  AND IdOblast = (SELECT [Id] FROM [AbiturSOATO].[dbo].[SOATO_Области] WHERE [Name] = '".$area."')";
+  AND IdOblast = (SELECT [Id] FROM [AbiturSOATO].[dbo].[SOATO_Области] WHERE [Name] = '" . $area . "')";
 }
 $stmt = sqlsrv_query($conn, $sql);
 $array = array(sqlsrv_num_fields($stmt));
@@ -25,9 +25,11 @@ if (sqlsrv_num_fields($stmt) == false) {
     echo "No rows returned.";
 } else {
     $i = 0;
+    $previousName = '';
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         $newArray[$i] = array(
-            'name' => $row['Name']);
+            'name' => $row['Name'],
+            'ruralCouncil' => $row['SelSovet']);
         $i++;
     }
 }

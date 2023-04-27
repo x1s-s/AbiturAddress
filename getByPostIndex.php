@@ -7,10 +7,11 @@ $connectionInfo = array(
     "Database" => $args['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-$sql = "SELECT DISTINCT SOATO_Области.Name AS Region,
+$sql = "SELECT SOATO_Области.Name AS Region,
 SOATO_ГородаРайоны.Name AS City,
 SOATO_НаселенныеПункты.Name AS Settlement,
-SOATO_НаселенныеПункты.TypeNS AS SettlementType
+SOATO_НаселенныеПункты.TypeNS AS SettlementType,
+SOATO_НаселенныеПункты.SelSovet AS RuralCouncil
 FROM SOATO_ПочтовыеИндексы, SOATO_ГородаРайоны, SOATO_НаселенныеПункты, SOATO_Области
 WHERE PostIndex = ". $postIndex . "
 AND SOATO_Области.Id = SOATO_ПочтовыеИндексы.КодОбласти
@@ -28,6 +29,7 @@ if (sqlsrv_num_fields($stmt) == false) {
             'Region' => $row['Region'],
             'City' => $row['City'],
             'Settlement' => $row['Settlement'],
+            'RuralCouncil' => $row['RuralCouncil'],
             'SettlementType' => $row['SettlementType']);
         $i++;
     }
