@@ -1,5 +1,4 @@
 const url = window.location.href;
-//TODO: Сделать запись в новую таблицу
 
 function getAddressDataFromLogin(){
     $.ajax(
@@ -13,9 +12,11 @@ function getAddressDataFromLogin(){
                 console.log(obj);
                 if(obj.length >= 1){
                     document.getElementById("postIndex").value = obj[0]['postIndex'];
-                    document.getElementById("country").value = obj[0]['country'];
-                    document.getElementById("area").value = obj[0]['area'];
-                    document.getElementById("city").value = obj[0]['city'];
+                    document.getElementById("country").value = obj[0]['country'] !== null ? obj[0]['country'] : "Беларусь";
+                    document.getElementById("area").value = obj[0]['area'] !== null ? obj[0]['area'] : "Гомельская";
+                    obj[0]['city'] = obj[0]['city'] !== null ? obj[0]['city'] : "Гомель";
+                    document.getElementById("city").value = obj[0]['city'] !== null ? obj[0]['city'] : "Гомель";
+                    obj[0]['settlementType'] = obj[0]['settlementType'] === null ? "г." : obj[0]['settlementType'];
                     document.getElementById("settlementType").value = obj[0]['settlementType'];
                     if(obj[0]['settlementType'] === 'г.'){
                         document.getElementById('settlement').value = obj[0]['city'];
@@ -26,7 +27,7 @@ function getAddressDataFromLogin(){
                         document.getElementById('settlement').disabled = false;
                         document.getElementById("settlementType").disabled = false;
                     }
-                    document.getElementById("streetType").value = obj[0]['streetType'];
+                    document.getElementById("streetType").value = obj[0]['streetType'] === null ? "ул." : obj[0]['streetType'];
                     document.getElementById("street").value = obj[0]['street'];
                     if(obj[0]['haveKorpus'] === 1){
                         document.getElementById("korpus").click();
@@ -113,7 +114,8 @@ function getSelectedByPostIndex(elementNumber) {
     document.getElementById("area").value = area;
     document.getElementById("city").value = city;
     document.getElementById("settlement").value = settlement;
-    document.getElementById("settlementType").value = settlementType;
+    loadSettlementType()
+    setTimeout(() => {document.getElementById("settlementType").value = settlementType}, 100);
     inputSettlement();
     $('#postIndexModal').modal('hide');
     $('#exampleModal').modal('show');
@@ -139,6 +141,7 @@ function loadSettlementType() {
                     return;
                 }
                 const select = document.getElementById("settlementType");
+                select.innerHTML = "";
                 for (let i = 0; i < obj.length; i++) {
                     const option = document.createElement("option");
                     option.value = obj[i]['CodeSOATO'];
@@ -276,7 +279,8 @@ function checkPostIndex(){
     const postIndex = document.getElementById("postIndex").value;
     let settlement = document.getElementById("settlement").value;
     const settlementType = document.getElementById("settlementType").value;
-    if(settlement !== "" && settlementType !== ""){
+    const area = document.getElementById("area").value
+    if(settlement !== "" && settlementType !== "" && area !== ""){
         let ruralCouncil = "";
         if(settlement.includes("с-совет")){
             ruralCouncil = settlement.split(" с-совет: ")[1];
@@ -286,7 +290,7 @@ function checkPostIndex(){
             {
                 url: url + "checkPostIndex.php",
                 type: "GET",
-                data: {ruralCouncil: ruralCouncil,settlement: settlement, settlementType: settlementType},
+                data: {area: area,ruralCouncil: ruralCouncil,settlement: settlement, settlementType: settlementType},
                 success: function (data) {
                     const obj = JSON.parse(data);
                     console.log(obj)
@@ -408,6 +412,7 @@ function inputSettlement(){
         settlementType.value = "г.";
         settlementType.innerHTML = "<option value = \"г.\">г.</option>";
         settlementType.disabled = true;
+        checkPostIndex();
     } else {
         settlement.disabled = false;
         settlementType.disabled = false;
