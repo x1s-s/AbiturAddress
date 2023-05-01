@@ -1,5 +1,6 @@
 <?php
-$login = $_POST['login'];
+session_start();
+$login = $_SESSION['login'];
 $postIndex = $_POST['postIndex'];
 $country = $_POST['country'];
 $area = $_POST['area'];

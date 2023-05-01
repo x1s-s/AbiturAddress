@@ -15,10 +15,10 @@
 </head>
 
 <body>
-<div style="margin-top: 15px">
-    <input type="text" id="login" placeholder="Login">
-</div>
-
+<?php
+session_start();
+$_SESSION["login"] = "Login1"
+?>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
         onclick="loadData()" style="margin-top: 15px">
     Launch demo modal

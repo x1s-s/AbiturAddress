@@ -5,7 +5,7 @@ function getAddressDataFromLogin(){
         {
             url: url + "getDataFromLogin.php",
             type: "GET",
-            data : {login: document.getElementById("login").value},
+            data : {},
             success: function (data) {
                 console.log(data);
                 const obj = JSON.parse(data);
@@ -421,7 +421,6 @@ function inputSettlement(){
 }
 
 function putToDatabase(){
-    const login = document.getElementById("login").value;
     const postIndex = document.getElementById("postIndex").value;
     const country = document.getElementById("country").value;
     const area = document.getElementById("area").value;
@@ -447,13 +446,12 @@ function putToDatabase(){
     }
     const house = document.getElementById("house").value;
     const flat = document.getElementById("flat").value;
-    console.log(login, postIndex, country, area, city, settlement, settlementType, street, streetType, korpusOrBuilding, korpus, house, ruralCouncil, flat, ruralCouncilNameToAddress)
+    console.log( postIndex, country, area, city, settlement, settlementType, street, streetType, korpusOrBuilding, korpus, house, ruralCouncil, flat, ruralCouncilNameToAddress)
     $.ajax(
         {
             url: url + "putToDatabase.php",
             type: "POST",
             data: {
-                login: login,
                 postIndex: postIndex,
                 country: country,
                 area: area,

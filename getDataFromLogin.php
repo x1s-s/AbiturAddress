@@ -1,6 +1,8 @@
 <?php
 $args = include 'db.php';
-$login = $_GET['login'];
+$login = '';
+session_start();
+$login = $_SESSION["login"];
 $serverName = $args['dsn'];
 $connectionInfo = array(
     'CharacterSet' => $args['charset'],
