@@ -16,7 +16,9 @@
 
 <body>
 <?php
-session_start();
+if(session_status() != PHP_SESSION_ACTIVE){
+    session_start();
+}
 $_SESSION["login"] = "Login1"
 ?>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"

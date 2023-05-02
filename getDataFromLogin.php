@@ -1,7 +1,9 @@
 <?php
+if(session_status() != PHP_SESSION_ACTIVE){
+    session_start();
+}
 $args = include 'db.php';
 $login = '';
-session_start();
 $login = $_SESSION["login"];
 $serverName = $args['dsn'];
 $connectionInfo = array(
