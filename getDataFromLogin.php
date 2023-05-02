@@ -3,8 +3,10 @@ if(session_status() != PHP_SESSION_ACTIVE){
     session_start();
 }
 $args = include 'db.php';
-$login = '';
-$login = $_SESSION["login"];
+$login = "";
+if(isset($_SESSION['login'])){
+    $login = $_SESSION['login'];
+}
 $serverName = $args['dsn'];
 $connectionInfo = array(
     'CharacterSet' => $args['charset'],

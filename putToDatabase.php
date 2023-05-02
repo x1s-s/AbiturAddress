@@ -2,7 +2,10 @@
 if (session_status() != PHP_SESSION_ACTIVE) {
     session_start();
 }
-$login = $_SESSION['login'];
+$login = "";
+if(isset($_SESSION['login'])){
+    $login = $_SESSION['login'];
+}
 $postIndex = $_POST['postIndex'];
 $country = $_POST['country'];
 $area = $_POST['area'];
