@@ -231,8 +231,10 @@ function getStreet(){
                     const select = document.getElementById("streetData");
                     for (let i = 0; i < obj.length; i++) {
                         const option = document.createElement("option");
-                        option.value = obj[i]['name'];
-                        option.innerHTML = obj[i]['name'];
+                        let street = obj[i]['name'].charAt(0);
+                        street += obj[i]['name'].slice(1).toLowerCase();
+                        option.value = street;
+                        option.innerHTML = street;
                         select.appendChild(option);
                     }
                 }
