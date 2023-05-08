@@ -283,8 +283,8 @@ function checkPostIndex(){
     if(settlement !== "" && settlementType !== "" && area !== ""){
         let ruralCouncil = "";
         if(settlement.includes("с-совет")){
-            ruralCouncil = settlement.split(" с-совет: ")[1];
-            settlement = settlement.split(" с-совет: ")[0];
+            ruralCouncil = settlement.split(" с-совет : ")[1];
+            settlement = settlement.split(" с-совет : ")[0];
         }
         $.ajax(
             {
@@ -342,8 +342,8 @@ function checkSettlementType(){
     let ruralCouncil = "";
     if(city !== '' && settlement !== ''){
         if(settlement.includes("с-совет")){
-            ruralCouncil = settlement.split(" с-совет: ")[1];
-            settlement = settlement.split(" с-совет: ")[0];
+            ruralCouncil = settlement.split(" с-совет : ")[1];
+            settlement = settlement.split(" с-совет : ")[0];
         }
         $.ajax(
             {
@@ -353,6 +353,9 @@ function checkSettlementType(){
                 success: function (data) {
                     console.log(data)
                     const obj = JSON.parse(data);
+                    if(obj.length === 0){
+                        return;
+                    }
                     const select = document.getElementById("settlementType");
                     select.innerHTML = "";
                     for (let i = 0; i < obj.length; i++) {
@@ -422,6 +425,10 @@ function inputSettlement(){
 
 function putToDatabase(){
     const postIndex = document.getElementById("postIndex").value;
+    if (postIndex.length !== 6){
+        alert("Почтовый индекс должен состоять из 6 цифр");
+        return;
+    }
     const country = document.getElementById("country").value;
     const area = document.getElementById("area").value;
     const city = document.getElementById("city").value;
