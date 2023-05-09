@@ -256,8 +256,6 @@ function getSettlement(){
                 data: {area: area, city: city},
                 success: function (data) {
                     const obj = JSON.parse(data);
-                    //добавь ко всем совпадающим полям name в obj поле ruralCouncil
-
                     const select = document.getElementById("settlementData");
                     for (let i = 0; i < obj.length; i++) {
                         const option = document.createElement("option");
@@ -341,6 +339,9 @@ function checkSettlementType(){
     }
     let settlement = document.getElementById("settlement").value;
     const city = document.getElementById("city").value;
+    if(settlement === ""){
+        loadSettlementType();
+    }
     let ruralCouncil = "";
     if(city !== '' && settlement !== ''){
         if(settlement.includes("с-совет")){
@@ -356,6 +357,7 @@ function checkSettlementType(){
                     console.log(data)
                     const obj = JSON.parse(data);
                     if(obj.length === 0){
+                        loadSettlementType();
                         return;
                     }
                     const select = document.getElementById("settlementType");

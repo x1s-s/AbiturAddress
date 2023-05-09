@@ -10,11 +10,11 @@ $connectionInfo = array(
 $conn = sqlsrv_connect($serverName, $connectionInfo);
 $sql = '';
 if (substr($city, -7) == 'р-он') {
-    $sql = "SELECT [Name], SelSovet FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
+    $sql = "SELECT DISTINCT [Name], SelSovet FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
   WHERE IdRegion = (SELECT [IdRegion] FROM [AbiturSOATO].[dbo].[SOATO_ГородаРайоны] WHERE [Name] = '" . $city . "')
   AND IdOblast = (SELECT [Id] FROM [AbiturSOATO].[dbo].[SOATO_Области] WHERE [Name] = '" . $area . "') ORDER BY Name";
 } else {
-    $sql = "SELECT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
+    $sql = "SELECT DISTINCT [Name] FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
   WHERE IdRegion IS NULL
   AND IdOblast = (SELECT [Id] FROM [AbiturSOATO].[dbo].[SOATO_Области] WHERE [Name] = '" . $area . "')";
 }
