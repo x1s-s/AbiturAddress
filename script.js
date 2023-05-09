@@ -411,6 +411,7 @@ function enableInput(){
 function inputSettlement(){
     const city = document.getElementById("city").value.toString();
     const settlement = document.getElementById("settlement");
+    settlement.value = "";
     const settlementType = document.getElementById("settlementType");
     const country = document.getElementById("country").value;
     if(city.substring(city.length - 4) !== 'р-он' && country === "Беларусь"){
