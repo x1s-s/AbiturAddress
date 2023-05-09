@@ -8,7 +8,6 @@ $connectionInfo = array(
     "Database" => $argc['database'],
 );
 $conn = sqlsrv_connect($serverName, $connectionInfo);
-
 $sql = '';
 if (substr($city, -7) == 'р-он') {
     $sql = "SELECT DISTINCT [Name], SelSovet FROM [AbiturSOATO].[dbo].[SOATO_НаселенныеПункты]
