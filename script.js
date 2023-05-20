@@ -122,6 +122,18 @@ function getSelectedByPostIndex(elementNumber) {
 }
 
 function loadData() {
+    function updateLogin() {
+        const login = document.getElementById("login").value;
+        $.ajax(
+            {
+                url: url + "updateLogin.php",
+                type: "POST",
+                data: {login: login}
+            }
+        )
+    }
+
+    updateLogin();
     loadSettlementType();
     loadStreetType();
     loadArea();
@@ -499,4 +511,3 @@ function checkArea(){
         loadArea()
     }
 }
-

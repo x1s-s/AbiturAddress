@@ -22,9 +22,12 @@ if(session_status() != PHP_SESSION_ACTIVE){
 }
 $_SESSION["login"] = "Login1"
 ?>
+<div style="margin-top: 20px; margin-left: 20px">
+    <input type="text" id="login" placeholder="Логин">
+</div>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-        onclick="loadData()" style="margin-top: 15px">
-    Launch demo modal
+        onclick="loadData()" style="margin-top: 15px; margin-left: 20px">
+    Ввести адрес
 </button>
 
 <div class="modal fade" id="exampleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
